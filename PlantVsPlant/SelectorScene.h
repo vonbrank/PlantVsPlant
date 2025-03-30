@@ -1,39 +1,36 @@
 #pragma once
 #include <iostream>
-
-#include "Scene.h"
 #include "SceneManager.h"
 
 extern SceneManager scene_manager;
 
-class MenuScene : public Scene
+class SelectorScene : public Scene
 {
-public:
     void on_enter() override
     {
-        std::cout << "enter main menu" << std::endl;
+        std::cout << "enter selector scene" << std::endl;
     }
 
     void on_update() override
     {
-        std::cout << "main menu update" << std::endl;
+        std::cout << "selector scene update" << std::endl;
     }
 
     void on_draw() override
     {
-        outtextxy(10, 10, _T("main menu draw content"));
+        outtextxy(10, 10, _T("selector scene draw content"));
     }
 
     void on_input(const ExMessage& msg) override
     {
         if (msg.message == WM_KEYDOWN)
         {
-            scene_manager.switch_to(SceneManager::SceneType::Game);
+            scene_manager.switch_to(SceneManager::SceneType::Menu);
         }
     }
 
     void on_exit() override
     {
-        std::cout << "main menu exit" << std::endl;
+        std::cout << "selector scene exit" << std::endl;
     }
 };
