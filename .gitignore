@@ -24,7 +24,7 @@ mono_crash.*
 x64/
 x86/
 !/lib/x64
-# !/lib/x86
+!/lib/x86
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
