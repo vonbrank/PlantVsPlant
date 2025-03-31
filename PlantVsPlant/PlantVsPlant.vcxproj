@@ -177,6 +177,7 @@
     <ClInclude Include="Scene\MenuScene.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SelectorScene.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

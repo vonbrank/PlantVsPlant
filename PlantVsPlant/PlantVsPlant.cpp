@@ -1,9 +1,11 @@
 #include <graphics.h>
 
+#include "Atlas.h"
 #include "Scene/GameScene.h"
 #include "Scene/MenuScene.h"
 #include "Scene/Scene.h"
 #include "SceneManager.h"
+#include "util.h"
 #include "Scene/SelectorScene.h"
 
 Scene* menu_scene;
@@ -11,6 +13,17 @@ Scene* game_scene;
 Scene* selector_scene = nullptr;
 
 SceneManager scene_manager;
+
+void flip_atlas(Atlas& src, Atlas& dst)
+{
+    dst.clear();
+    for (int i = 0; i < src.get_size(); i++)
+    {
+        IMAGE img_flipped;
+        flip_image(src.get_image(i), &img_flipped);
+        dst.add_image(img_flipped);
+    }
+}
 
 int main(int argc, char* argv[])
 {
