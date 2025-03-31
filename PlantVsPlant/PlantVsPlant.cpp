@@ -1,10 +1,10 @@
 #include <graphics.h>
 
-#include "GameScene.h"
-#include "MenuScene.h"
-#include "Scene.h"
+#include "Scene/GameScene.h"
+#include "Scene/MenuScene.h"
+#include "Scene/Scene.h"
 #include "SceneManager.h"
-#include "SelectorScene.h"
+#include "Scene/SelectorScene.h"
 
 Scene* menu_scene;
 Scene* game_scene;
