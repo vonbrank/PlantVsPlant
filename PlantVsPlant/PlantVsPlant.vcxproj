@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Atlas.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="PlantVsPlant.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Atlas.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\MenuScene.h" />
