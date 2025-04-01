@@ -162,6 +162,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Atlas.cpp" />
     <ClCompile Include="PlantVsPlant.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Scene\SelectorScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Atlas.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
