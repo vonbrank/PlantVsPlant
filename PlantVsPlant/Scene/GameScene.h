@@ -13,7 +13,7 @@ public:
         std::cout << "enter game scene" << std::endl;
     }
 
-    void on_update() override
+    void on_update(int delta_time) override
     {
         std::cout << "game scene update" << std::endl;
     }

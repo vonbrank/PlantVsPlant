@@ -11,7 +11,7 @@ public:
     {
     }
 
-    virtual void on_update()
+    virtual void on_update(int delta_time)
     {
     }
 

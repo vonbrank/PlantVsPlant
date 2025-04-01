@@ -11,7 +11,7 @@ class SelectorScene : public Scene
         std::cout << "enter selector scene" << std::endl;
     }
 
-    void on_update() override
+    void on_update(int delta_time) override
     {
         std::cout << "selector scene update" << std::endl;
     }

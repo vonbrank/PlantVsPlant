@@ -50,9 +50,9 @@ public:
         current_scene->on_enter();
     }
 
-    void on_update()
+    void on_update(int delta_time)
     {
-        current_scene->on_update();
+        current_scene->on_update(delta_time);
     }
 
     void on_draw()
