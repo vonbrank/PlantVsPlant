@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "SceneManager.h"
+#include "Timer.h"
 
 extern SceneManager scene_manager;
 
@@ -20,13 +21,22 @@ public:
         animation_peashooter_run_right.set_atlas(&atlas_peashooter_run_right);
         animation_peashooter_run_right.set_interval(75);
         animation_peashooter_run_right.set_loop(true);
+
+        timer.set_wait_time(1000);
+        timer.set_one_shot(false);
+        timer.set_callback([]()
+        {
+            std::cout << "Timer Shot!" << std::endl;
+        });
     }
 
     void on_update(int delta_time) override
     {
-        std::cout << "main menu update" << std::endl;
+        // std::cout << "main menu update" << std::endl;
         camera.on_update(delta_time);
         animation_peashooter_run_right.on_update(delta_time);
+
+        timer.on_update(delta_time);
     }
 
     void on_draw() override
@@ -50,6 +60,7 @@ public:
     }
 
 private:
+    Timer timer;
     Camera camera;
     Animation animation_peashooter_run_right;
 };
