@@ -83,6 +83,7 @@ Scene* menu_scene = nullptr;
 Scene* game_scene = nullptr;
 Scene* selector_scene = nullptr;
 
+Camera main_camera;
 SceneManager scene_manager;
 
 void flip_atlas(Atlas& src, Atlas& dst)
@@ -180,9 +181,9 @@ void load_game_resources()
     mciSendString(_T("open Assets/resources/sun_explode.mp3 alias sun_explode"), NULL, 0, NULL);
     mciSendString(_T("open Assets/resources/sun_explode_ex.mp3 alias sun_explode_ex"), NULL, 0, NULL);
     mciSendString(_T("open Assets/resources/sun_text.mp3 alias sun_text"), NULL, 0, NULL);
-    mciSendString(_T("open Assets/resources/ui_confirm.wav alias ui_confirm"), NULL, 0, NULL);
-    mciSendString(_T("open Assets/resources/ui_switch.wav alias ui_switch"), NULL, 0, NULL);
-    mciSendString(_T("open Assets/resources/ui_win.wav alias ui_win"), NULL, 0, NULL);
+    mciSendString(_T("open Assets/resources/ui_confirm.mp3 alias ui_confirm"), NULL, 0, NULL);
+    mciSendString(_T("open Assets/resources/ui_switch.mp3 alias ui_switch"), NULL, 0, NULL);
+    mciSendString(_T("open Assets/resources/ui_win.mp3 alias ui_win"), NULL, 0, NULL);
 }
 
 int main(int argc, char* argv[])
@@ -217,7 +218,7 @@ int main(int argc, char* argv[])
         last_tick_time = current_tick_time;
 
         cleardevice();
-        scene_manager.on_draw();
+        scene_manager.on_draw(main_camera);
         FlushBatchDraw();
 
         DWORD frame_end_time = GetTickCount();
