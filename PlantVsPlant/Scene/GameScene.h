@@ -18,7 +18,7 @@ public:
         std::cout << "game scene update" << std::endl;
     }
 
-    void on_draw() override
+    void on_draw(const Camera& camera) override
     {
         outtextxy(10, 10, _T("game menu draw content"));
     }

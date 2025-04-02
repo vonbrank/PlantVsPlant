@@ -10,57 +10,33 @@
 
 extern SceneManager scene_manager;
 
-extern Atlas atlas_peashooter_run_right;
+extern IMAGE img_menu_background;
 
 class MenuScene : public Scene
 {
 public:
     void on_enter() override
     {
-        std::cout << "enter main menu" << std::endl;
-        animation_peashooter_run_right.set_atlas(&atlas_peashooter_run_right);
-        animation_peashooter_run_right.set_interval(75);
-        animation_peashooter_run_right.set_loop(true);
-
-        timer.set_wait_time(1000);
-        timer.set_one_shot(false);
-        timer.set_callback([]()
-        {
-            std::cout << "Timer Shot!" << std::endl;
-        });
+        mciSendString(_T("play bgm_menu repeat from 0"), NULL, 0, NULL);
     }
 
     void on_update(int delta_time) override
     {
-        // std::cout << "main menu update" << std::endl;
-        camera.on_update(delta_time);
-        animation_peashooter_run_right.on_update(delta_time);
-
-        timer.on_update(delta_time);
     }
 
-    void on_draw() override
+    void on_draw(const Camera& camera) override
     {
-        outtextxy(10, 10, _T("main menu draw content"));
-        const Vector2& camera_position = camera.get_position();
-        animation_peashooter_run_right.on_draw((int)(100 - camera_position.x), (int)(100 - camera_position.y));
+        putimage(0, 0, &img_menu_background);
     }
 
     void on_input(const ExMessage& msg) override
     {
-        if (msg.message == WM_KEYDOWN)
+        if(msg.message == WM_KEYUP)
         {
-            camera.shake(10, 350);
+            mciSendString(_T("play ui_confirm from 0"), NULL, 0, NULL);
+            scene_manager.switch_to(SceneManager::SceneType::Selector);
         }
     }
 
-    void on_exit() override
-    {
-        std::cout << "main menu exit" << std::endl;
-    }
-
 private:
-    Timer timer;
-    Camera camera;
-    Animation animation_peashooter_run_right;
 };

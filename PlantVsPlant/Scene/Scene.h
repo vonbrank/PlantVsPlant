@@ -1,6 +1,8 @@
 #pragma once
 #include <graphics.h>
 
+#include "Camera.h"
+
 class Scene
 {
 public:
@@ -15,7 +17,7 @@ public:
     {
     }
 
-    virtual void on_draw()
+    virtual void on_draw(const Camera& camera)
     {
     }
 

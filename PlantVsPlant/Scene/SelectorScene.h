@@ -16,7 +16,7 @@ class SelectorScene : public Scene
         std::cout << "selector scene update" << std::endl;
     }
 
-    void on_draw() override
+    void on_draw(const Camera& camera) override
     {
         outtextxy(10, 10, _T("selector scene draw content"));
     }
