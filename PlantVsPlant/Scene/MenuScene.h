@@ -50,7 +50,7 @@ public:
     {
         if (msg.message == WM_KEYDOWN)
         {
-            scene_manager.switch_to(SceneManager::SceneType::Game);
+            camera.shake(10, 350);
         }
     }
 
