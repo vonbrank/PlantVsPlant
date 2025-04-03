@@ -195,6 +195,9 @@ int main(int argc, char* argv[])
 
     initgraph(1280, 720);
 
+    settextstyle(28, 0, _T("IPix"));
+    setbkmode(TRANSPARENT);
+
     BeginBatchDraw();
 
     menu_scene = new MenuScene();

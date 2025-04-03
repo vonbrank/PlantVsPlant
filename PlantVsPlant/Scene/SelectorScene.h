@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 
 #include "Animation.h"
@@ -63,7 +63,7 @@ class SelectorScene : public Scene
         pos_img_2P_gravestone.x = getwidth() / 2 + (getwidth() / 2 - img_gravestone_left.getwidth()) / 2 + OFFSET_X;
         pos_img_2P_gravestone.y = pos_img_1P_gravestone.y;
         pos_animation_1P.x = (getwidth() / 2 - atlas_peashooter_idle_right.get_image(0)->getwidth()) / 2 - OFFSET_X;
-        pos_animation_1P.y = pos_img_1P.y + img_1P.getheight() + 35;
+        pos_animation_1P.y = pos_img_1P_gravestone.y + 80;
         pos_animation_2P.x = getwidth() / 2 + (getwidth() / 2 - atlas_peashooter_idle_right.get_image(0)->getwidth()) /
             2 + OFFSET_X;
         pos_animation_2P.y = pos_animation_1P.y;
@@ -82,11 +82,58 @@ class SelectorScene : public Scene
 
     void on_update(int delta_time) override
     {
+        animation_peashooter.on_update(delta_time);
+        animation_sunflower.on_update(delta_time);
+
+        selector_background_scroll_offset_x += delta_time * 0.5;
+        if (selector_background_scroll_offset_x >= img_peashooter_selector_background_left.getwidth())
+        {
+            selector_background_scroll_offset_x = 0;
+        }
     }
 
     void on_draw(const Camera& camera) override
     {
+        IMAGE* img_p1_selector_background = nullptr;
+        IMAGE* img_p2_selector_background = nullptr;
+
+        switch (player_type_1)
+        {
+        case PlayerType::Peashooter:
+            img_p1_selector_background = &img_peashooter_selector_background_right;
+            break;
+        case PlayerType::Sunflower:
+            img_p1_selector_background = &img_sunflower_selector_background_right;
+            break;
+        default:
+            img_p1_selector_background = &img_peashooter_selector_background_right;
+            break;
+        }
+
+        switch (player_type_2)
+        {
+        case PlayerType::Peashooter:
+            img_p2_selector_background = &img_peashooter_selector_background_left;
+            break;
+        case PlayerType::Sunflower:
+            img_p2_selector_background = &img_sunflower_selector_background_left;
+            break;
+        default:
+            img_p2_selector_background = &img_peashooter_selector_background_left;
+            break;
+        }
+
         putimage(0, 0, &img_selector_background);
+
+        putimage_alpha(selector_background_scroll_offset_x - img_p1_selector_background->getwidth(), 0,
+                       img_p1_selector_background);
+        putimage_alpha(selector_background_scroll_offset_x, 0,
+                       img_p1_selector_background->getwidth() - selector_background_scroll_offset_x, 0,
+                       img_p1_selector_background, 0, 0);
+        putimage_alpha(getwidth() - img_p2_selector_background->getwidth(), 0,
+                       img_p2_selector_background->getwidth() - selector_background_scroll_offset_x, 0,
+                       img_p2_selector_background, selector_background_scroll_offset_x, 0);
+        putimage_alpha(getwidth() - selector_background_scroll_offset_x, 0, img_p2_selector_background);
 
         putimage_alpha(pos_img_VS.x, pos_img_VS.y, &img_VS);
 
@@ -94,6 +141,38 @@ class SelectorScene : public Scene
         putimage_alpha(pos_img_2P.x, pos_img_2P.y, &img_2P);
         putimage_alpha(pos_img_1P_gravestone.x, pos_img_1P_gravestone.y, &img_gravestone_right);
         putimage_alpha(pos_img_2P_gravestone.x, pos_img_2P_gravestone.y, &img_gravestone_left);
+
+        switch (player_type_1)
+        {
+        case PlayerType::Peashooter:
+            animation_peashooter.on_draw(camera, pos_animation_1P.x, pos_animation_1P.y);
+            pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(
+                str_peashooter_name)) / 2;
+            outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_peashooter_name);
+            break;
+        case PlayerType::Sunflower:
+            animation_sunflower.on_draw(camera, pos_animation_1P.x, pos_animation_1P.y);
+            pos_img_1P_name.x = pos_img_1P_gravestone.x + (img_gravestone_right.getwidth() - textwidth(
+                str_sunflower_name)) / 2;
+            outtextxy_shaded(pos_img_1P_name.x, pos_img_1P_name.y, str_sunflower_name);
+            break;
+        }
+
+        switch (player_type_2)
+        {
+        case PlayerType::Peashooter:
+            animation_peashooter.on_draw(camera, pos_animation_2P.x, pos_animation_2P.y);
+            pos_img_2P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(
+                str_peashooter_name)) / 2;
+            outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_peashooter_name);
+            break;
+        case PlayerType::Sunflower:
+            animation_sunflower.on_draw(camera, pos_animation_2P.x, pos_animation_2P.y);
+            pos_img_2P_name.x = pos_img_2P_gravestone.x + (img_gravestone_left.getwidth() - textwidth(
+                str_sunflower_name)) / 2;
+            outtextxy_shaded(pos_img_2P_name.x, pos_img_2P_name.y, str_sunflower_name);
+            break;
+        }
 
         putimage_alpha(pos_img_1P_desc.x, pos_img_1P_desc.y, &img_1P_desc);
         putimage_alpha(pos_img_2P_desc.x, pos_img_2P_desc.y, &img_2P_desc);
@@ -108,6 +187,14 @@ class SelectorScene : public Scene
     void on_exit() override
     {
     }
+
+private:
+    enum class PlayerType
+    {
+        Peashooter = 0,
+        Sunflower,
+        Max,
+    };
 
 private:
     POINT pos_img_VS = {0};
@@ -129,4 +216,21 @@ private:
 
     Animation animation_peashooter;
     Animation animation_sunflower;
+
+    PlayerType player_type_1 = PlayerType::Peashooter;
+    PlayerType player_type_2 = PlayerType::Sunflower;
+
+    LPCTSTR str_peashooter_name = _T("豌豆射手");
+    LPCTSTR str_sunflower_name = _T("向日葵");
+
+    int selector_background_scroll_offset_x = 0;
+
+private:
+    void outtextxy_shaded(int x, int y, LPCTSTR str)
+    {
+        settextcolor(RGB(45, 45, 45));
+        outtextxy(x + 3, y + 3, str);
+        settextcolor(RGB(255, 255, 255));
+        outtextxy(x, y, str);
+    }
 };
