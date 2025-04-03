@@ -71,7 +71,7 @@ class SelectorScene : public Scene
         pos_img_2P_name.y = pos_img_1P_name.y;
         pos_1P_selector_btn_left.x = pos_img_1P_gravestone.x - img_1P_selector_btn_idle_left.getwidth();
         pos_1P_selector_btn_left.y = pos_img_1P_gravestone.y + (img_gravestone_right.getheight() -
-            img_1P_selector_btn_idle_left.getheight() / 2);
+            img_1P_selector_btn_idle_left.getheight()) / 2;
         pos_1P_selector_btn_right.x = pos_img_1P_gravestone.x + img_gravestone_right.getwidth();
         pos_1P_selector_btn_right.y = pos_1P_selector_btn_left.y;
         pos_2P_selector_btn_left.x = pos_img_2P_gravestone.x - img_2P_selector_btn_idle_left.getwidth();
@@ -174,6 +174,15 @@ class SelectorScene : public Scene
             break;
         }
 
+        putimage_alpha(pos_1P_selector_btn_left.x, pos_1P_selector_btn_left.y,
+                       is_btn_1P_left_down ? &img_1P_selector_btn_down_left : &img_1P_selector_btn_idle_left);
+        putimage_alpha(pos_1P_selector_btn_right.x, pos_1P_selector_btn_right.y,
+                       is_btn_1P_right_down ? &img_1P_selector_btn_down_right : &img_1P_selector_btn_idle_right);
+        putimage_alpha(pos_2P_selector_btn_left.x, pos_2P_selector_btn_left.y,
+                       is_btn_2P_left_down ? &img_2P_selector_btn_down_left : &img_2P_selector_btn_idle_left);
+        putimage_alpha(pos_2P_selector_btn_right.x, pos_2P_selector_btn_right.y,
+                       is_btn_2P_right_down ? &img_2P_selector_btn_down_right : &img_2P_selector_btn_idle_right);
+
         putimage_alpha(pos_img_1P_desc.x, pos_img_1P_desc.y, &img_1P_desc);
         putimage_alpha(pos_img_2P_desc.x, pos_img_2P_desc.y, &img_2P_desc);
 
@@ -182,6 +191,60 @@ class SelectorScene : public Scene
 
     void on_input(const ExMessage& msg) override
     {
+        switch (msg.message)
+        {
+        case WM_KEYDOWN:
+            switch (msg.vkcode)
+            {
+            case 0x41: // 'A'
+                is_btn_1P_left_down = true;
+                break;
+            case 0x44: // 'D'
+                is_btn_1P_right_down = true;
+                break;
+            case VK_LEFT: // '<-'
+                is_btn_2P_left_down = true;
+                break;
+            case VK_RIGHT: // '->'
+                is_btn_2P_right_down = true;
+                break;
+            default:
+                break;
+            }
+            break;
+        case WM_KEYUP:
+            switch (msg.vkcode)
+            {
+            case 0x41: // 'A'
+                is_btn_1P_left_down = false;
+                player_type_1 = (PlayerType)(((int)PlayerType::Max + (int)player_type_1 - 1) % (int)PlayerType::Max);
+                mciSendString(_T("play ui_swith from 0"), NULL, 0, NULL);
+                break;
+            case 0x44: // 'D'
+                is_btn_1P_right_down = false;
+                player_type_1 = (PlayerType)(((int)player_type_1 + 1) % (int)PlayerType::Max);
+                mciSendString(_T("play ui_swith from 0"), NULL, 0, NULL);
+                break;
+            case VK_LEFT: // '<-'
+                is_btn_2P_left_down = false;
+                player_type_2 = (PlayerType)(((int)PlayerType::Max + (int)player_type_2 - 1) % (int)PlayerType::Max);
+                mciSendString(_T("play ui_swith from 0"), NULL, 0, NULL);
+                break;
+            case VK_RIGHT: // '->'
+                is_btn_2P_right_down = false;
+                player_type_2 = (PlayerType)(((int)player_type_2 + 1) % (int)PlayerType::Max);
+                mciSendString(_T("play ui_swith from 0"), NULL, 0, NULL);
+                break;
+            case VK_RETURN:
+                scene_manager.switch_to(SceneManager::SceneType::Game);
+                mciSendString(_T("play ui_confirm from 0"), NULL, 0, NULL);
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     void on_exit() override
@@ -224,6 +287,11 @@ private:
     LPCTSTR str_sunflower_name = _T("向日葵");
 
     int selector_background_scroll_offset_x = 0;
+
+    bool is_btn_1P_left_down = false;
+    bool is_btn_1P_right_down = false;
+    bool is_btn_2P_left_down = false;
+    bool is_btn_2P_right_down = false;
 
 private:
     void outtextxy_shaded(int x, int y, LPCTSTR str)
