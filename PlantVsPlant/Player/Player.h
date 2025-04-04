@@ -38,6 +38,11 @@ public:
 
         current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
 
+        if (is_attacking_ex)
+        {
+            current_animation = is_facing_right ? &animation_attack_ex_right : &animation_attack_ex_left;
+        }
+
         current_animation->on_update(delta_time);
 
         timer_attack_cd.on_update(delta_time);
@@ -50,6 +55,12 @@ public:
         if (current_animation)
         {
             current_animation->on_draw(camera, (int)position.x, (int)position.y);
+        }
+
+        if (is_debug)
+        {
+            setlinecolor(RGB(0, 125, 255));
+            rectangle((int)position.x, (int)position.y, (int)(position.x + size.x), (int)(position.y + size.y));
         }
     }
 
@@ -232,6 +243,21 @@ protected:
                         break;
                     }
                 }
+            }
+        }
+
+        for (Bullet* bullet : bullet_list)
+        {
+            if (!bullet->get_valid() || bullet->get_target() != id)
+            {
+                continue;
+            }
+
+            if (bullet->check_collision(position, size))
+            {
+                bullet->on_collide();
+                bullet->set_valid(false);
+                hp -= bullet->get_damage();
             }
         }
     }

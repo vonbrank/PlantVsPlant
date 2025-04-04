@@ -44,8 +44,8 @@ public:
             is_attacking_ex = false;
         });
 
-        timer_attack_ex.set_wait_time(100);
-        timer_attack_ex.set_callback([&]()
+        timer_spawn_pea_ex.set_wait_time(100);
+        timer_spawn_pea_ex.set_callback([&]()
         {
             spawn_pea_bullet(speed_pea_ex);
         });

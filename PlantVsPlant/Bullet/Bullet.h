@@ -6,6 +6,8 @@
 #include "Vector2.h"
 #include "Player/PlayerID.h"
 
+extern bool is_debug;
+
 class Bullet
 {
 public:
@@ -96,6 +98,13 @@ public:
 
     virtual void on_draw(const Camera& camera) const
     {
+        if (is_debug)
+        {
+            setfillcolor(RGB(255, 255, 255));
+            setlinecolor(RGB(255, 255, 255));
+            rectangle((int)position.x, (int)position.y, (int)(position.x + size.x), (int)(position.y + size.y));
+            solidcircle((int)(position.x + size.x / 2), (int)(position.y + size.y / 2), 5);
+        }
     }
 
 protected:

@@ -58,6 +58,8 @@ public:
 
     void on_draw(const Camera& camera) const override
     {
+        Bullet::on_draw(camera);
+        
         if (valid)
         {
             putimage_alpha(camera, (int)position.x, (int)position.y, &img_pea);

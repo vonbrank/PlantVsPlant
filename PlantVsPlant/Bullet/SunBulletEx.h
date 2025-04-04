@@ -12,8 +12,8 @@ class SunBulletEx : public Bullet
 public:
     SunBulletEx()
     {
-        size.x = 96;
-        size.y = 96;
+        size.x = 288;
+        size.y = 288;
 
         damage = 30;
 
@@ -79,6 +79,7 @@ public:
 
     void on_draw(const Camera& camera) const override
     {
+        Bullet::on_draw(camera);
         if (valid)
         {
             animation_idle.on_draw(camera, (int)position.x, (int)position.y);

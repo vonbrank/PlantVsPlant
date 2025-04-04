@@ -91,7 +91,7 @@ public:
 
         Vector2 bullet_position;
         const Vector2& bullet_size = bullet->get_size();
-        bullet_position.x = position.x + (size.x = bullet_size.x) / 2;
+        bullet_position.x = position.x + (size.x - bullet_size.x) / 2;
         bullet_position.y = position.y;
 
         bullet->set_position(bullet_position.x, bullet_position.y);
@@ -132,7 +132,7 @@ public:
 
         bullet_list.push_back(bullet);
 
-        mciSendString(_T("play pea_shoot_ex from 0"), NULL, 0, NULL);
+        mciSendString(_T("play sun_text from 0"), NULL, 0, NULL);
     }
 
 private:
