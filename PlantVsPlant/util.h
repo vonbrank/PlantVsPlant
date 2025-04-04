@@ -6,6 +6,9 @@
 
 inline void putimage_alpha(int x, int y, IMAGE* img)
 {
+    if(img == nullptr) {
+        return;
+    }
     int w = img->getwidth();
     int h = img->getheight();
     AlphaBlend(
@@ -17,6 +20,9 @@ inline void putimage_alpha(int x, int y, IMAGE* img)
 
 inline void putimage_alpha(const Camera& camera, int x, int y, IMAGE* img)
 {
+    if(img == nullptr) {
+        return;
+    }
     int w = img->getwidth();
     int h = img->getheight();
     const Vector2& pos_camera = camera.get_position();
@@ -29,6 +35,9 @@ inline void putimage_alpha(const Camera& camera, int x, int y, IMAGE* img)
 
 inline void putimage_alpha(int x, int y, int width, int height, IMAGE* img, int src_x, int src_y)
 {
+    if(img == nullptr) {
+        return;
+    }
     int w = width > 0 ? width : img->getwidth();
     int h = height > 0 ? height : img->getheight();
     AlphaBlend(
