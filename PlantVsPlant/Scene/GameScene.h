@@ -5,6 +5,7 @@
 #include "Platform.h"
 #include "Scene.h"
 #include "SceneManager.h"
+#include "SelectorScene.h"
 #include "util.h"
 
 extern IMAGE img_sky;
@@ -22,6 +23,9 @@ class GameScene : public Scene
 public:
     void on_enter() override
     {
+        player_1->set_position(200, 50);
+        player_2->set_position(975, 50);
+
         pos_img_sky.x = (getwidth() - img_sky.getwidth()) / 2;
         pos_img_sky.y = (getheight() - img_sky.getheight()) / 2;
 
@@ -65,6 +69,8 @@ public:
 
     void on_update(int delta_time) override
     {
+        player_1->on_update(delta_time);
+        player_2->on_update(delta_time);
     }
 
     void on_draw(const Camera& camera) override
@@ -82,10 +88,16 @@ public:
             settextcolor(RGB(255, 0, 0));
             outtextxy(15, 15, _T("debug mode on, press 'Q' to quit."));
         }
+
+        player_1->on_draw(camera);
+        player_2->on_draw(camera);
     }
 
     void on_input(const ExMessage& msg) override
     {
+        player_1->on_input(msg);
+        player_2->on_input(msg);
+
         switch (msg.message)
         {
         case WM_KEYUP:

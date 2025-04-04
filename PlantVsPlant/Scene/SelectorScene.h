@@ -4,6 +4,12 @@
 #include "Animation.h"
 #include "Atlas.h"
 #include "SceneManager.h"
+#include "Player/PeashooterPlayer.h"
+#include "Player/Player.h"
+#include "Player/SunflowerPlayer.h"
+
+extern Player* player_1;
+extern Player* player_2;
 
 extern IMAGE img_VS;
 extern IMAGE img_1P;
@@ -249,6 +255,29 @@ class SelectorScene : public Scene
 
     void on_exit() override
     {
+        switch (player_type_1)
+        {
+        case PlayerType::Peashooter:
+            player_1 = new PeashooterPlayer();
+            player_1->set_id(PlayerID::P1);
+            break;
+        case PlayerType::Sunflower:
+            player_1 = new SunflowerPlayer();
+            player_1->set_id(PlayerID::P1);
+            break;
+        }
+
+        switch (player_type_2)
+        {
+        case PlayerType::Peashooter:
+            player_2 = new PeashooterPlayer();
+            player_2->set_id(PlayerID::P2);
+            break;
+        case PlayerType::Sunflower:
+            player_2 = new SunflowerPlayer();
+            player_2->set_id(PlayerID::P2);
+            break;
+        }
     }
 
 private:

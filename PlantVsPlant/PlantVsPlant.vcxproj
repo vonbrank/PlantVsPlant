@@ -167,6 +167,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="PlantVsPlant.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="Player\PeashooterPlayer.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\SunflowerPlayer.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\MenuScene.cpp" />
@@ -180,6 +183,10 @@
     <ClInclude Include="Atlas.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="Player\PeashooterPlayer.h" />
+    <ClInclude Include="Player\Player.h" />
+    <ClInclude Include="Player\PlayerID.h" />
+    <ClInclude Include="Player\SunflowerPlayer.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\MenuScene.h" />
