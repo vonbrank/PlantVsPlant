@@ -90,6 +90,7 @@ Scene* selector_scene = nullptr;
 Camera main_camera;
 SceneManager scene_manager;
 
+std::vector<Bullet*> bullet_list;
 std::vector<Platform> platform_list;
 
 Player* player_1 = nullptr;

@@ -5,13 +5,24 @@
 #include "Camera.h"
 #include "Platform.h"
 #include "PlayerID.h"
+#include "Bullet/Bullet.h"
 
 extern std::vector<Platform> platform_list;
+extern std::vector<Bullet*> bullet_list;
 
 class Player
 {
 public:
-    Player() = default;
+    Player()
+    {
+        timer_attack_cd.set_wait_time(attack_cd);
+        timer_attack_cd.set_one_shot(true);
+        timer_attack_cd.set_callback([&]()
+        {
+            can_attack = true;
+        });
+    }
+
     ~Player() = default;
 
     virtual void on_update(int delta_time)
@@ -28,6 +39,8 @@ public:
         current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
 
         current_animation->on_update(delta_time);
+
+        timer_attack_cd.on_update(delta_time);
 
         move_and_collide(delta_time);
     }
@@ -59,6 +72,21 @@ public:
                 case 0x57: // 'W'
                     on_jump();
                     break;
+                case 0x46: // 'F'
+                    if (can_attack)
+                    {
+                        on_attack();
+                        can_attack = false;
+                        timer_attack_cd.restart();
+                    }
+                    break;
+                case 0x47: // 'G'
+                    if (mp >= 100)
+                    {
+                        on_attack_ex();
+                        mp = 0;
+                    }
+                    break;
                 }
 
                 break;
@@ -73,6 +101,21 @@ public:
                     break;
                 case VK_UP: // '↑'
                     on_jump();
+                    break;
+                case VK_OEM_PERIOD:
+                    if (can_attack)
+                    {
+                        on_attack();
+                        can_attack = false;
+                        timer_attack_cd.restart();
+                    }
+                    break;
+                case VK_OEM_2: // 'G'
+                    if (mp >= 100)
+                    {
+                        on_attack_ex();
+                        mp = 0;
+                    }
                     break;
                 }
                 break;
@@ -126,17 +169,40 @@ public:
 
     virtual void on_run(float distance)
     {
+        if (is_attacking_ex)
+        {
+            return;
+        }
+
         position.x += distance;
     }
 
     virtual void on_jump()
     {
-        if (velocity.y != 0)
+        if (velocity.y != 0 || is_attacking_ex)
         {
             return;
         }
 
         velocity.y += jump_velocity;
+    }
+
+    const Vector2& get_position() const
+    {
+        return position;
+    }
+
+    const Vector2& get_size() const
+    {
+        return size;
+    }
+
+    virtual void on_attack()
+    {
+    }
+
+    virtual void on_attack_ex()
+    {
     }
 
 protected:
@@ -176,6 +242,9 @@ protected:
     const float jump_velocity = -0.85f;
 
 protected:
+    int mp = 0;
+    int hp = 100;
+
     Vector2 size;
     Vector2 position;
     Vector2 velocity;
@@ -184,6 +253,8 @@ protected:
     Animation animation_idle_right;
     Animation animation_run_left;
     Animation animation_run_right;
+    Animation animation_attack_ex_left;
+    Animation animation_attack_ex_right;
     Animation* current_animation = nullptr;
 
     PlayerID id = PlayerID::P1;
@@ -192,4 +263,10 @@ protected:
     bool is_right_key_down = false;
 
     bool is_facing_right = true;
+
+    bool can_attack = true;
+    int attack_cd = 50;
+    Timer timer_attack_cd;
+
+    bool is_attacking_ex = false;
 };
