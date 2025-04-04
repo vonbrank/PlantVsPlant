@@ -18,6 +18,8 @@ public:
         if (direction != 0)
         {
             is_facing_right = direction > 0;
+            float distance = direction * run_velocity * delta_time;
+            on_run(distance);
         }
 
         current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
@@ -109,6 +111,14 @@ public:
         position.x = x;
         position.y = y;
     }
+
+    virtual void on_run(float distance)
+    {
+        position.x += distance;
+    }
+
+protected:
+    const float run_velocity = 0.55f;
 
 protected:
     Vector2 position;
