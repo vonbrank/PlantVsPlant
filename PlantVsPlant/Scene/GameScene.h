@@ -8,6 +8,9 @@
 #include "SelectorScene.h"
 #include "util.h"
 
+extern Player* player_1;
+extern Player* player_2;
+
 extern IMAGE img_sky;
 extern IMAGE img_hills;
 extern IMAGE img_platform_large;

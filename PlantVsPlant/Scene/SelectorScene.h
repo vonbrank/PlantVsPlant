@@ -4,8 +4,8 @@
 #include "Animation.h"
 #include "Atlas.h"
 #include "SceneManager.h"
-#include "Player/PeashooterPlayer.h"
 #include "Player/Player.h"
+#include "Player/PeashooterPlayer.h"
 #include "Player/SunflowerPlayer.h"
 
 extern Player* player_1;

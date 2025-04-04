@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 
+#include "Player.h"
 #include "Atlas.h"
 #include "Bullet/SunBullet.h"
 #include "Bullet/SunBulletEx.h"
@@ -13,10 +14,9 @@ extern Atlas atlas_sunflower_attack_ex_left;
 extern Atlas atlas_sunflower_attack_ex_right;
 extern Atlas atlas_sun_text;
 
-#include "Player.h"
 
-extern Player* player_1 = nullptr;
-extern Player* player_2 = nullptr;
+extern Player* player_1;
+extern Player* player_2;
 
 
 class SunflowerPlayer : public Player

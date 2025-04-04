@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 
+#include "Player.h"
 #include "Atlas.h"
 #include "Bullet/PeaBullet.h"
-#include "Scene/GameScene.h"
 
 extern Atlas atlas_peashooter_idle_left;
 extern Atlas atlas_peashooter_idle_right;
@@ -12,7 +12,8 @@ extern Atlas atlas_peashooter_run_right;
 extern Atlas atlas_peashooter_attack_ex_left;
 extern Atlas atlas_peashooter_attack_ex_right;
 
-#include "Player.h"
+
+extern Camera main_camera;
 
 class PeashooterPlayer : public Player
 {
