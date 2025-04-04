@@ -166,6 +166,7 @@
     <ClCompile Include="Atlas.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="PlantVsPlant.cpp" />
+    <ClCompile Include="Platform.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\MenuScene.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Atlas.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Platform.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\MenuScene.h" />

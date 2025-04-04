@@ -1,6 +1,7 @@
 #include <graphics.h>
 
 #include "Atlas.h"
+#include "Platform.h"
 #include "Scene/GameScene.h"
 #include "Scene/MenuScene.h"
 #include "Scene/Scene.h"
@@ -9,6 +10,8 @@
 #include "Scene/SelectorScene.h"
 
 #pragma comment(lib, "winmm.lib")
+
+bool is_debug = false;
 
 IMAGE img_menu_background;
 
@@ -85,6 +88,8 @@ Scene* selector_scene = nullptr;
 
 Camera main_camera;
 SceneManager scene_manager;
+
+std::vector<Platform> platform_list;
 
 void flip_atlas(Atlas& src, Atlas& dst)
 {

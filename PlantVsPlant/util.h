@@ -6,7 +6,8 @@
 
 inline void putimage_alpha(int x, int y, IMAGE* img)
 {
-    if(img == nullptr) {
+    if (img == nullptr)
+    {
         return;
     }
     int w = img->getwidth();
@@ -20,7 +21,8 @@ inline void putimage_alpha(int x, int y, IMAGE* img)
 
 inline void putimage_alpha(const Camera& camera, int x, int y, IMAGE* img)
 {
-    if(img == nullptr) {
+    if (img == nullptr)
+    {
         return;
     }
     int w = img->getwidth();
@@ -35,7 +37,8 @@ inline void putimage_alpha(const Camera& camera, int x, int y, IMAGE* img)
 
 inline void putimage_alpha(int x, int y, int width, int height, IMAGE* img, int src_x, int src_y)
 {
-    if(img == nullptr) {
+    if (img == nullptr)
+    {
         return;
     }
     int w = width > 0 ? width : img->getwidth();
@@ -63,4 +66,11 @@ inline void flip_image(IMAGE* src, IMAGE* dst)
             dst_buffer[index_dst] = src_buffer[index_src];
         }
     }
+}
+
+
+inline void line(const Camera& camera, int x1, int y1, int x2, int y2)
+{
+    const Vector2& pos_camera = camera.get_position();
+    line((int)(x1 - pos_camera.x), (int)(y1 - pos_camera.y), (int)(x2 - pos_camera.x), (int)(y2 - pos_camera.y));
 }
