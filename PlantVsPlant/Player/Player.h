@@ -3,7 +3,10 @@
 
 #include "Animation.h"
 #include "Camera.h"
+#include "Platform.h"
 #include "PlayerID.h"
+
+extern std::vector<Platform> platform_list;
 
 class Player
 {
@@ -25,6 +28,8 @@ public:
         current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
 
         current_animation->on_update(delta_time);
+
+        move_and_collide(delta_time);
     }
 
     virtual void on_draw(const Camera& camera)
@@ -51,7 +56,11 @@ public:
                 case 0x44: // 'D'
                     is_right_key_down = true;
                     break;
+                case 0x57: // 'W'
+                    on_jump();
+                    break;
                 }
+
                 break;
             case PlayerID::P2:
                 switch (msg.vkcode)
@@ -61,6 +70,9 @@ public:
                     break;
                 case VK_RIGHT: // '->'
                     is_right_key_down = true;
+                    break;
+                case VK_UP: // '↑'
+                    on_jump();
                     break;
                 }
                 break;
@@ -117,11 +129,56 @@ public:
         position.x += distance;
     }
 
-protected:
-    const float run_velocity = 0.55f;
+    virtual void on_jump()
+    {
+        if (velocity.y != 0)
+        {
+            return;
+        }
+
+        velocity.y += jump_velocity;
+    }
 
 protected:
+    void move_and_collide(int delta_time)
+    {
+        velocity.y += gravity * delta_time;
+        position += velocity * (float)delta_time;
+
+        if (velocity.y > 0)
+        {
+            for (const Platform& platform : platform_list)
+            {
+                const Platform::CollisionShape& shape = platform.shape;
+                bool is_collide_x = (max(position.x + size.x, shape.right) - min(position.x, shape.left) <= size.x + (
+                    shape.right - shape.left));
+                bool is_collide_y = (shape.y >= position.y && shape.y <= position.y + size.y);
+
+                if (is_collide_x && is_collide_y)
+                {
+                    float delta_pos_y = velocity.y * delta_time;
+                    float last_tick_foot_pos_y = position.y + size.y - delta_pos_y;
+                    if (last_tick_foot_pos_y <= shape.y)
+                    {
+                        position.y = shape.y - size.y;
+                        velocity.y = 0;
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+protected:
+    const float run_velocity = 0.55f;
+    const float gravity = 1.6e-3f;
+    const float jump_velocity = -0.85f;
+
+protected:
+    Vector2 size;
     Vector2 position;
+    Vector2 velocity;
 
     Animation animation_idle_left;
     Animation animation_idle_right;
