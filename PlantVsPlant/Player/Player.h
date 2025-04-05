@@ -21,6 +21,19 @@ public:
         {
             can_attack = true;
         });
+
+        timer_invulnerable.set_wait_time(750);
+        timer_invulnerable.set_one_shot(true);
+        timer_invulnerable.set_callback([&]()
+        {
+            is_invulnerable = false;
+        });
+
+        timer_invulnerable_blink.set_wait_time(75);
+        timer_invulnerable_blink.set_callback([&]()
+        {
+            is_showing_sketch_frame = !is_showing_sketch_frame;
+        });
     }
 
     ~Player() = default;
@@ -31,7 +44,10 @@ public:
 
         if (direction != 0)
         {
-            is_facing_right = direction > 0;
+            if(!is_attacking_ex)
+            {
+                is_facing_right = direction > 0;
+            }
             float distance = direction * run_velocity * delta_time;
             on_run(distance);
         }
@@ -46,15 +62,28 @@ public:
         current_animation->on_update(delta_time);
 
         timer_attack_cd.on_update(delta_time);
+        timer_invulnerable.on_update(delta_time);
+        timer_invulnerable_blink.on_update(delta_time);
+
+        if (is_showing_sketch_frame)
+        {
+            sketch_image(current_animation->get_frame(), &img_sketch);
+        }
 
         move_and_collide(delta_time);
     }
 
     virtual void on_draw(const Camera& camera)
     {
-        if (current_animation)
+        if (hp > 0 && is_invulnerable && is_showing_sketch_frame)
         {
-            current_animation->on_draw(camera, (int)position.x, (int)position.y);
+            putimage_alpha(camera, (int)position.x, (int)position.y, &img_sketch);
+        } else
+        {
+            if (current_animation)
+            {
+                current_animation->on_draw(camera, (int)position.x, (int)position.y);
+            }
         }
 
         if (is_debug)
@@ -216,6 +245,12 @@ public:
     {
     }
 
+    void make_invulnerable()
+    {
+        is_invulnerable = true;
+        timer_invulnerable.restart();
+    }
+
 protected:
     void move_and_collide(int delta_time)
     {
@@ -246,18 +281,22 @@ protected:
             }
         }
 
-        for (Bullet* bullet : bullet_list)
+        if(!is_invulnerable)
         {
-            if (!bullet->get_valid() || bullet->get_target() != id)
+            for (Bullet* bullet : bullet_list)
             {
-                continue;
-            }
+                if (!bullet->get_valid() || bullet->get_target() != id)
+                {
+                    continue;
+                }
 
-            if (bullet->check_collision(position, size))
-            {
-                bullet->on_collide();
-                bullet->set_valid(false);
-                hp -= bullet->get_damage();
+                if (bullet->check_collision(position, size))
+                {
+                    make_invulnerable();
+                    bullet->on_collide();
+                    bullet->set_valid(false);
+                    hp -= bullet->get_damage();
+                }
             }
         }
     }
@@ -295,4 +334,10 @@ protected:
     Timer timer_attack_cd;
 
     bool is_attacking_ex = false;
+
+    IMAGE img_sketch;
+    bool is_invulnerable = false;
+    bool is_showing_sketch_frame;
+    Timer timer_invulnerable;
+    Timer timer_invulnerable_blink;
 };

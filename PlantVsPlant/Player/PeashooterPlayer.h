@@ -64,6 +64,11 @@ public:
         }
     }
 
+    void on_draw(const Camera& camera) override
+    {
+        Player::on_draw(camera);
+    }
+
 private:
     void spawn_pea_bullet(float speed)
     {
