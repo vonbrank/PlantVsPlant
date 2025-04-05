@@ -285,6 +285,8 @@ class SelectorScene : public Scene
             img_player_2_avatar = &img_avatar_sunflower;
             break;
         }
+
+        mciSendString(_T("stop bgm_menu"), NULL, 0, NULL);
     }
 
 private:

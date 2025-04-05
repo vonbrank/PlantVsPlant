@@ -353,6 +353,11 @@ public:
         return hp;
     }
 
+    void set_hp(int val)
+    {
+        hp = val;
+    }
+
     int get_mp() const
     {
         return mp;
