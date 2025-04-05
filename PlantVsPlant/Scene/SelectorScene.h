@@ -275,12 +275,12 @@ class SelectorScene : public Scene
         switch (player_type_2)
         {
         case PlayerType::Peashooter:
-            player_2 = new PeashooterPlayer();
+            player_2 = new PeashooterPlayer(false);
             player_2->set_id(PlayerID::P2);
             img_player_2_avatar = &img_avatar_peashooter;
             break;
         case PlayerType::Sunflower:
-            player_2 = new SunflowerPlayer();
+            player_2 = new SunflowerPlayer(false);
             player_2->set_id(PlayerID::P2);
             img_player_2_avatar = &img_avatar_sunflower;
             break;

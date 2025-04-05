@@ -243,6 +243,15 @@ public:
 
     void on_exit() override
     {
+        delete player_1;
+        player_1 = nullptr;
+        delete player_2;
+        player_2 = nullptr;
+
+        is_debug = false;
+
+        bullet_list.clear();
+        main_camera.reset();
     }
 
 private:

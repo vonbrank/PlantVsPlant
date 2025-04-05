@@ -13,12 +13,16 @@ extern std::vector<Bullet*> bullet_list;
 extern Atlas atlas_run_effect;
 extern Atlas atlas_jump_effect;
 extern Atlas atlas_land_effect;
+extern IMAGE img_1P_cursor;
+extern IMAGE img_2P_cursor;
 
 class Player
 {
 public:
-    Player()
+    Player(bool facing_right = true): is_facing_right(facing_right)
     {
+        current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
+
         timer_attack_cd.set_wait_time(attack_cd);
         timer_attack_cd.set_one_shot(true);
         timer_attack_cd.set_callback([&]()
@@ -74,6 +78,13 @@ public:
         {
             is_land_effect_visible = false;
         });
+
+        timer_curosr_visibility.set_wait_time(2500);
+        timer_curosr_visibility.set_one_shot(true);
+        timer_curosr_visibility.set_callback([&]()
+        {
+            is_cursor_visible = false;
+        });
     }
 
     ~Player() = default;
@@ -111,6 +122,7 @@ public:
         timer_invulnerable.on_update(delta_time);
         timer_invulnerable_blink.on_update(delta_time);
         timer_run_effect_generation.on_update(delta_time);
+        timer_curosr_visibility.on_update(delta_time);
 
         if (hp <= 0)
         {
@@ -170,6 +182,23 @@ public:
         {
             setlinecolor(RGB(0, 125, 255));
             rectangle((int)position.x, (int)position.y, (int)(position.x + size.x), (int)(position.y + size.y));
+        }
+
+        if (is_cursor_visible)
+        {
+            switch (id)
+            {
+            case PlayerID::P1:
+                putimage_alpha(
+                    camera, (int)(position.x + (size.x - img_1P_cursor.getwidth()) / 2),
+                    (int)(position.y - img_1P_cursor.getheight()), &img_1P_cursor);
+                break;
+            case PlayerID::P2:
+                putimage_alpha(
+                    camera, (int)(position.x + (size.x - img_2P_cursor.getwidth()) / 2),
+                    (int)(position.y - img_2P_cursor.getheight()), &img_2P_cursor);
+                break;
+            }
         }
     }
 
@@ -367,7 +396,7 @@ protected:
     void move_and_collide(int delta_time)
     {
         float velocity_y_last_frame = velocity.y;
-        
+
         velocity.y += gravity * delta_time;
         position += velocity * (float)delta_time;
 
@@ -390,7 +419,7 @@ protected:
                         position.y = shape.y - size.y;
                         velocity.y = 0;
 
-                        if(velocity_y_last_frame != 0)
+                        if (velocity_y_last_frame != 0)
                         {
                             on_land();
                         }
@@ -474,4 +503,7 @@ protected:
 
     Timer timer_run_effect_generation;
     Timer timer_die_effect_generation;
+
+    bool is_cursor_visible = true;
+    Timer timer_curosr_visibility;
 };
