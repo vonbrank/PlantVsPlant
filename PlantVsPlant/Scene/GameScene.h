@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "SceneManager.h"
 #include "SelectorScene.h"
+#include "StatusBar.h"
 #include "util.h"
 
 extern Player* player_1;
@@ -19,6 +20,9 @@ extern IMAGE img_platform_small;
 extern Camera main_camera;
 extern std::vector<Platform> platform_list;
 
+extern IMAGE* img_player_1_avatar;
+extern IMAGE* img_player_2_avatar;
+
 extern SceneManager scene_manager;
 
 class GameScene : public Scene
@@ -26,6 +30,12 @@ class GameScene : public Scene
 public:
     void on_enter() override
     {
+        status_bar_1P.set_avatar(img_player_1_avatar);
+        status_bar_2P.set_avatar(img_player_2_avatar);
+
+        status_bar_1P.set_position(235, 625);
+        status_bar_2P.set_position(675, 625);
+        
         player_1->set_position(200, 50);
         player_2->set_position(975, 50);
 
@@ -94,6 +104,11 @@ public:
         {
             bullet->on_update(delta_time);
         }
+
+        status_bar_1P.set_hp(player_1->get_hp());
+        status_bar_1P.set_mp(player_1->get_mp());
+        status_bar_2P.set_hp(player_2->get_hp());
+        status_bar_2P.set_mp(player_2->get_mp());
     }
 
     void on_draw(const Camera& camera) override
@@ -119,6 +134,9 @@ public:
         {
             bullet->on_draw(camera);
         }
+
+        status_bar_1P.on_draw();
+        status_bar_2P.on_draw();
     }
 
     void on_input(const ExMessage& msg) override
@@ -145,4 +163,7 @@ public:
 private:
     POINT pos_img_sky = {0};
     POINT pos_img_hills = {0};
+
+    StatusBar status_bar_1P;
+    StatusBar status_bar_2P;
 };

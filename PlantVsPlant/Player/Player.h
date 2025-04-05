@@ -251,6 +251,16 @@ public:
         timer_invulnerable.restart();
     }
 
+    int get_hp() const
+    {
+        return hp;
+    }
+
+    int get_mp() const
+    {
+        return mp;
+    }
+
 protected:
     void move_and_collide(int delta_time)
     {

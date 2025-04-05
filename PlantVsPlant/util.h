@@ -4,6 +4,8 @@
 
 #pragma comment(lib, "Msimg32.lib")
 
+#include "Camera.h"
+
 inline void putimage_alpha(int x, int y, IMAGE* img)
 {
     if (img == nullptr)

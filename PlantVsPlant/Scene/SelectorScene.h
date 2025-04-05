@@ -39,6 +39,9 @@ extern Atlas atlas_sunflower_idle_right;
 extern IMAGE img_avatar_peashooter;
 extern IMAGE img_avatar_sunflower;
 
+extern IMAGE* img_player_1_avatar;
+extern IMAGE* img_player_2_avatar;
+
 extern SceneManager scene_manager;
 
 class SelectorScene : public Scene
@@ -260,10 +263,12 @@ class SelectorScene : public Scene
         case PlayerType::Peashooter:
             player_1 = new PeashooterPlayer();
             player_1->set_id(PlayerID::P1);
+            img_player_1_avatar = &img_avatar_peashooter;
             break;
         case PlayerType::Sunflower:
             player_1 = new SunflowerPlayer();
             player_1->set_id(PlayerID::P1);
+            img_player_1_avatar = &img_avatar_sunflower;
             break;
         }
 
@@ -272,10 +277,12 @@ class SelectorScene : public Scene
         case PlayerType::Peashooter:
             player_2 = new PeashooterPlayer();
             player_2->set_id(PlayerID::P2);
+            img_player_2_avatar = &img_avatar_peashooter;
             break;
         case PlayerType::Sunflower:
             player_2 = new SunflowerPlayer();
             player_2->set_id(PlayerID::P2);
+            img_player_2_avatar = &img_avatar_sunflower;
             break;
         }
     }
