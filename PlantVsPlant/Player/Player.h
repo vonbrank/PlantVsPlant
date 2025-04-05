@@ -1,5 +1,6 @@
 #pragma once
 #include <graphics.h>
+#include <iostream>
 
 #include "Animation.h"
 #include "Camera.h"
@@ -13,6 +14,10 @@ extern std::vector<Bullet*> bullet_list;
 extern Atlas atlas_run_effect;
 extern Atlas atlas_jump_effect;
 extern Atlas atlas_land_effect;
+extern Atlas atlas_peashooter_die_left;
+extern Atlas atlas_peashooter_die_right;
+extern Atlas atlas_sunflower_die_left;
+extern Atlas atlas_sunflower_die_right;
 extern IMAGE img_1P_cursor;
 extern IMAGE img_2P_cursor;
 
@@ -112,6 +117,10 @@ public:
         if (is_attacking_ex)
         {
             current_animation = is_facing_right ? &animation_attack_ex_right : &animation_attack_ex_left;
+        }
+        if (hp <= 0)
+        {
+            current_animation = last_hurt_direction.x < 0 ? &animation_die_left : &animation_die_right;
         }
 
         current_animation->on_update(delta_time);
@@ -400,6 +409,10 @@ protected:
         velocity.y += gravity * delta_time;
         position += velocity * (float)delta_time;
 
+        if (hp <= 0)
+        {
+            return;
+        }
 
         if (velocity.y > 0)
         {
@@ -445,6 +458,12 @@ protected:
                     bullet->on_collide();
                     bullet->set_valid(false);
                     hp -= bullet->get_damage();
+                    last_hurt_direction = bullet->get_position() - position;
+                    if (hp <= 0)
+                    {
+                        velocity.x = last_hurt_direction.x < 0 ? 0.35f : -0.35f;
+                        velocity.y = -1.0f;
+                    }
                 }
             }
         }
@@ -471,6 +490,8 @@ protected:
     Animation animation_attack_ex_right;
     Animation animation_jump_effect;
     Animation animation_land_effect;
+    Animation animation_die_left;
+    Animation animation_die_right;
 
     bool is_jump_effect_visible = false;
     bool is_land_effect_visible = false;
@@ -506,4 +527,6 @@ protected:
 
     bool is_cursor_visible = true;
     Timer timer_curosr_visibility;
+
+    Vector2 last_hurt_direction;
 };
