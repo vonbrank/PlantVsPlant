@@ -58,6 +58,22 @@ public:
             particle_position.y = position.y + size.y - frame->getheight();
             particle_list.emplace_back(particle_position, &atlas_run_effect, 150);
         });
+
+        animation_jump_effect.set_atlas(&atlas_jump_effect);
+        animation_jump_effect.set_interval(25);
+        animation_jump_effect.set_loop(false);
+        animation_jump_effect.set_animation_finish_callback([&]()
+        {
+            is_jump_effect_visible = false;
+        });
+
+        animation_land_effect.set_atlas(&atlas_land_effect);
+        animation_land_effect.set_interval(50);
+        animation_land_effect.set_loop(false);
+        animation_land_effect.set_animation_finish_callback([&]()
+        {
+            is_land_effect_visible = false;
+        });
     }
 
     ~Player() = default;
@@ -88,6 +104,8 @@ public:
         }
 
         current_animation->on_update(delta_time);
+        animation_jump_effect.on_update(delta_time);
+        animation_land_effect.on_update(delta_time);
 
         timer_attack_cd.on_update(delta_time);
         timer_invulnerable.on_update(delta_time);
@@ -122,11 +140,20 @@ public:
 
     virtual void on_draw(const Camera& camera)
     {
+        if (is_jump_effect_visible)
+        {
+            animation_jump_effect.on_draw(camera, (int)position_jump_effect.x, (int)position_jump_effect.y);
+        }
+        if (is_land_effect_visible)
+        {
+            animation_land_effect.on_draw(camera, (int)position_land_effect.x, (int)position_land_effect.y);
+        }
+
         for (const Particle& particle : particle_list)
         {
             particle.on_draw(camera);
         }
-        
+
         if (hp > 0 && is_invulnerable && is_showing_sketch_frame)
         {
             putimage_alpha(camera, (int)position.x, (int)position.y, &img_sketch);
@@ -279,6 +306,22 @@ public:
         }
 
         velocity.y += jump_velocity;
+        is_jump_effect_visible = true;
+        animation_jump_effect.reset();
+
+        IMAGE* effect_frame = animation_jump_effect.get_frame();
+        position_jump_effect.x = position.x + (size.x - effect_frame->getwidth()) / 2;
+        position_jump_effect.y = position.y + size.y - effect_frame->getheight();
+    }
+
+    virtual void on_land()
+    {
+        is_land_effect_visible = true;
+        animation_land_effect.reset();
+
+        IMAGE* effect_frame = animation_land_effect.get_frame();
+        position_land_effect.x = position.x + (size.x - effect_frame->getwidth()) / 2;
+        position_land_effect.y = position.y + size.y - effect_frame->getheight();
     }
 
     const Vector2& get_position() const
@@ -318,8 +361,11 @@ public:
 protected:
     void move_and_collide(int delta_time)
     {
+        float velocity_y_last_frame = velocity.y;
+        
         velocity.y += gravity * delta_time;
         position += velocity * (float)delta_time;
+
 
         if (velocity.y > 0)
         {
@@ -338,6 +384,11 @@ protected:
                     {
                         position.y = shape.y - size.y;
                         velocity.y = 0;
+
+                        if(velocity_y_last_frame != 0)
+                        {
+                            on_land();
+                        }
 
                         break;
                     }
@@ -384,6 +435,15 @@ protected:
     Animation animation_run_right;
     Animation animation_attack_ex_left;
     Animation animation_attack_ex_right;
+    Animation animation_jump_effect;
+    Animation animation_land_effect;
+
+    bool is_jump_effect_visible = false;
+    bool is_land_effect_visible = false;
+
+    Vector2 position_jump_effect;
+    Vector2 position_land_effect;
+
     Animation* current_animation = nullptr;
 
     PlayerID id = PlayerID::P1;
