@@ -169,6 +169,7 @@
     <ClCompile Include="Bullet\SunBullet.cpp" />
     <ClCompile Include="Bullet\SunBulletEx.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PlantVsPlant.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player\PeashooterPlayer.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Bullet\SunBullet.h" />
     <ClInclude Include="Bullet\SunBulletEx.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player\PeashooterPlayer.h" />
     <ClInclude Include="Player\Player.h" />

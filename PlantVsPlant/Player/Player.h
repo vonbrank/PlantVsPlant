@@ -3,12 +3,16 @@
 
 #include "Animation.h"
 #include "Camera.h"
+#include "Particle.h"
 #include "Platform.h"
 #include "PlayerID.h"
 #include "Bullet/Bullet.h"
 
 extern std::vector<Platform> platform_list;
 extern std::vector<Bullet*> bullet_list;
+extern Atlas atlas_run_effect;
+extern Atlas atlas_jump_effect;
+extern Atlas atlas_land_effect;
 
 class Player
 {
@@ -34,6 +38,26 @@ public:
         {
             is_showing_sketch_frame = !is_showing_sketch_frame;
         });
+
+        timer_run_effect_generation.set_wait_time(75);
+        timer_run_effect_generation.set_callback([&]()
+        {
+            Vector2 particle_position;
+            IMAGE* frame = atlas_run_effect.get_image(0);
+            particle_position.x = position.x + (size.x - frame->getwidth()) / 2;
+            particle_position.y = position.y + size.y - frame->getheight();
+            particle_list.emplace_back(particle_position, &atlas_run_effect, 45);
+        });
+
+        timer_die_effect_generation.set_wait_time(35);
+        timer_die_effect_generation.set_callback([&]()
+        {
+            Vector2 particle_position;
+            IMAGE* frame = atlas_run_effect.get_image(0);
+            particle_position.x = position.x + (size.x - frame->getwidth()) / 2;
+            particle_position.y = position.y + size.y - frame->getheight();
+            particle_list.emplace_back(particle_position, &atlas_run_effect, 150);
+        });
     }
 
     ~Player() = default;
@@ -44,12 +68,16 @@ public:
 
         if (direction != 0)
         {
-            if(!is_attacking_ex)
+            if (!is_attacking_ex)
             {
                 is_facing_right = direction > 0;
             }
             float distance = direction * run_velocity * delta_time;
             on_run(distance);
+        }
+        else
+        {
+            timer_run_effect_generation.pause();
         }
 
         current_animation = is_facing_right ? &animation_idle_right : &animation_idle_left;
@@ -64,6 +92,25 @@ public:
         timer_attack_cd.on_update(delta_time);
         timer_invulnerable.on_update(delta_time);
         timer_invulnerable_blink.on_update(delta_time);
+        timer_run_effect_generation.on_update(delta_time);
+
+        if (hp <= 0)
+        {
+            timer_die_effect_generation.on_update(delta_time);
+        }
+
+        particle_list.erase(
+            std::remove_if(
+                particle_list.begin(), particle_list.end(), [](const Particle& particle)
+                {
+                    return !particle.check_valid();
+                }),
+            particle_list.end()
+        );
+        for (Particle& particle : particle_list)
+        {
+            particle.on_update(delta_time);
+        }
 
         if (is_showing_sketch_frame)
         {
@@ -75,10 +122,16 @@ public:
 
     virtual void on_draw(const Camera& camera)
     {
+        for (const Particle& particle : particle_list)
+        {
+            particle.on_draw(camera);
+        }
+        
         if (hp > 0 && is_invulnerable && is_showing_sketch_frame)
         {
             putimage_alpha(camera, (int)position.x, (int)position.y, &img_sketch);
-        } else
+        }
+        else
         {
             if (current_animation)
             {
@@ -215,6 +268,7 @@ public:
         }
 
         position.x += distance;
+        timer_run_effect_generation.resume();
     }
 
     virtual void on_jump()
@@ -291,7 +345,7 @@ protected:
             }
         }
 
-        if(!is_invulnerable)
+        if (!is_invulnerable)
         {
             for (Bullet* bullet : bullet_list)
             {
@@ -350,4 +404,9 @@ protected:
     bool is_showing_sketch_frame;
     Timer timer_invulnerable;
     Timer timer_invulnerable_blink;
+
+    std::vector<Particle> particle_list;
+
+    Timer timer_run_effect_generation;
+    Timer timer_die_effect_generation;
 };
