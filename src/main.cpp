@@ -13,6 +13,7 @@
 #pragma comment(lib, "winmm.lib")
 
 bool is_debug = false;
+bool game_is_running = false;
 
 IMAGE img_menu_background;
 
@@ -218,8 +219,15 @@ int main(int argc, char* argv[])
     selector_scene = new SelectorScene();
     scene_manager.set_current_scene(menu_scene);
 
-    while (true)
+    game_is_running = true;
+
+    while (game_is_running)
     {
+        if (!GetHWnd()) {
+            game_is_running = false;
+            continue;
+        }
+
         DWORD frame_start_time = GetTickCount();
 
         while (peekmessage(&msg))
